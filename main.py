@@ -80,6 +80,11 @@ def main(args: argparse.Namespace) -> None:
     logger = logging.getLogger("iron-rebalancer")
     OUTPUT_DIR.mkdir(exist_ok=True)
 
+    if args.crew:
+        from crew import run_crew
+        print(run_crew(verbose=args.verbose))
+        return
+
     cfg = load_config(CONFIG_PATH)
     risk_config = build_risk_config(cfg["risk"])
     alpha_cfg = cfg["alpha"]
@@ -207,6 +212,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="IRON-REBALANCER weekly signal generator")
     parser.add_argument("--kelly", action="store_true", help="Use Kelly sizing instead of Inverse-Vol")
     parser.add_argument("--notify", action="store_true", help="Send email notification (configure EMAIL_* in .env)")
+    parser.add_argument("--crew", action="store_true", help="Run CrewAI research team (requires ANTHROPIC_API_KEY in .env)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Debug logging")
     parsed = parser.parse_args()
     setup_logging(parsed.verbose)
