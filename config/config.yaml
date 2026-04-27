@@ -1,0 +1,160 @@
+system:
+  name: IRON-REBALANCER
+  version: "1.0.0"
+  run_frequency: weekly
+
+# LLM used only for report narration — not stock picking
+llm:
+  model: claude-sonnet-4-6
+  temperature: 0.0
+
+risk:
+  max_single_weight: 0.08
+  sector_cap: 0.25
+  vol_target: 0.15
+  max_correlation: 0.70
+  kelly_max_fraction: 0.25
+  trailing_stop_pct: 0.15
+  lookback_days: 252
+  min_adv_sek: 10_000_000
+  max_data_gap_pct: 0.05
+  top_n_candidates: 30
+
+alpha:
+  f_score_min: 7
+  roic_3yr_min: 0.15
+  momentum_lookback_months: 12
+  momentum_skip_months: 1
+
+# ── Universe ────────────────────────────────────────────────────────────────
+# SE: only .ST tickers — ADV filter applied at runtime
+# US: NYSE/NASDAQ only — ADV filter applied at runtime
+universe:
+  se_tickers:
+    - ERIC-B.ST    # Ericsson
+    - VOLV-B.ST    # Volvo
+    - ATCO-B.ST    # Atlas Copco
+    - SAND.ST      # Sandvik
+    - SKF-B.ST     # SKF
+    - SWED-A.ST    # Swedbank
+    - SSAB-B.ST    # SSAB
+    - NIBE-B.ST    # NIBE Industrier
+    - ALFA.ST      # Alfa Laval
+    - HEXA-B.ST    # Hexagon
+    - INDU-C.ST    # Industrivärden
+    - ESSITY-B.ST  # Essity
+    - TELIA.ST     # Telia
+    - SECU-B.ST    # Securitas
+    - SCA-B.ST     # SCA
+    - KINV-B.ST    # Kinnevik
+    - NDA-SE.ST    # Nordea
+    - SHB-A.ST     # Handelsbanken A
+    - SEB-A.ST     # SEB A
+    - SINCH.ST     # Sinch
+    - GETI-B.ST    # Getinge
+    - LATO-B.ST    # Latour
+    - LIFCO-B.ST   # Lifco
+    - BURE.ST      # Bure Equity
+    - INVE-B.ST    # Investor B
+    - EVO.ST       # Evolution
+    - SWEC-B.ST    # Sweco
+    - SKA-B.ST     # Skanska
+    - HUSQ-B.ST    # Husqvarna
+    - ABB.ST       # ABB (dual-listed)
+
+  us_tickers:
+    - AAPL
+    - MSFT
+    - GOOGL
+    - AMZN
+    - META
+    - NVDA
+    - JPM
+    - V
+    - MA
+    - PG
+    - JNJ
+    - UNH
+    - HD
+    - BAC
+    - XOM
+    - CVX
+    - LLY
+    - ABBV
+    - AVGO
+    - COST
+    - PEP
+    - KO
+    - TMO
+    - ORCL
+    - CRM
+    - AMD
+    - QCOM
+    - TXN
+    - WMT
+    - MCD
+
+# ── Sector map ───────────────────────────────────────────────────────────────
+sector_map:
+  # SE
+  ERIC-B.ST: Technology
+  VOLV-B.ST: Industrials
+  ATCO-B.ST: Industrials
+  SAND.ST: Industrials
+  SKF-B.ST: Industrials
+  SWED-A.ST: Financials
+  SSAB-B.ST: Materials
+  NIBE-B.ST: Industrials
+  ALFA.ST: Industrials
+  HEXA-B.ST: Technology
+  INDU-C.ST: Financials
+  ESSITY-B.ST: Consumer Staples
+  TELIA.ST: Communication
+  SECU-B.ST: Industrials
+  SCA-B.ST: Materials
+  KINV-B.ST: Financials
+  NDA-SE.ST: Financials
+  SHB-A.ST: Financials
+  SEB-A.ST: Financials
+  SINCH.ST: Technology
+  GETI-B.ST: Healthcare
+  LATO-B.ST: Financials
+  LIFCO-B.ST: Industrials
+  BURE.ST: Financials
+  INVE-B.ST: Financials
+  EVO.ST: Consumer Discretionary
+  SWEC-B.ST: Industrials
+  SKA-B.ST: Industrials
+  HUSQ-B.ST: Consumer Discretionary
+  ABB.ST: Industrials
+  # US
+  AAPL: Technology
+  MSFT: Technology
+  GOOGL: Communication
+  AMZN: Consumer Discretionary
+  META: Communication
+  NVDA: Technology
+  JPM: Financials
+  V: Financials
+  MA: Financials
+  PG: Consumer Staples
+  JNJ: Healthcare
+  UNH: Healthcare
+  HD: Consumer Discretionary
+  BAC: Financials
+  XOM: Energy
+  CVX: Energy
+  LLY: Healthcare
+  ABBV: Healthcare
+  AVGO: Technology
+  COST: Consumer Staples
+  PEP: Consumer Staples
+  KO: Consumer Staples
+  TMO: Healthcare
+  ORCL: Technology
+  CRM: Technology
+  AMD: Technology
+  QCOM: Technology
+  TXN: Technology
+  WMT: Consumer Staples
+  MCD: Consumer Discretionary
