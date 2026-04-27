@@ -32,9 +32,11 @@ from agents.data_architect import DataArchitect
 from agents.quant_researcher import QuantResearcher
 from agents.risk_supervisor import RiskInput, RiskSupervisor
 from agents.signal_commander import SignalCommander
+from core.factors import DataCoverageReport
 from core.portfolio import PortfolioState, load_portfolio
 from core.risk import RiskConfig
 from core.universe import get_usd_sek_rate
+from notifiers.email_notifier import EmailNotifier
 
 load_dotenv()
 
@@ -106,10 +108,12 @@ def main(args: argparse.Namespace) -> None:
         roic_min=alpha_cfg["roic_3yr_min"],
         top_n=risk_config.top_n_candidates,
     )
-    candidates = researcher.run(bundle, sector_map)
+    coverage = DataCoverageReport()
+    candidates = researcher.run(bundle, sector_map, coverage=coverage)
 
     if candidates.empty:
         logger.error("No candidates survived alpha filters — aborting.")
+        logger.error("Coverage report:\n%s", coverage.to_markdown())
         sys.exit(1)
 
     # ── [3] RiskSupervisor ────────────────────────────────────────────────────
@@ -164,6 +168,15 @@ def main(args: argparse.Namespace) -> None:
     # Persist updated peak prices
     portfolio.save(PORTFOLIO_PATH)
 
+    # ── Email notification (Feature C) ────────────────────────────────────────
+    if args.notify:
+        notifier = EmailNotifier()
+        notifier.send_weekly_brief(
+            signals=signals,
+            weight_result=weight_result,
+            report_path=report_path,
+        )
+
     # ── Summary ───────────────────────────────────────────────────────────────
     buys  = sum(1 for s in signals if s.action == "BUY")
     sells = sum(1 for s in signals if s.action == "SELL")
@@ -193,6 +206,7 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="IRON-REBALANCER weekly signal generator")
     parser.add_argument("--kelly", action="store_true", help="Use Kelly sizing instead of Inverse-Vol")
+    parser.add_argument("--notify", action="store_true", help="Send email notification (configure EMAIL_* in .env)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Debug logging")
     parsed = parser.parse_args()
     setup_logging(parsed.verbose)

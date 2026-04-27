@@ -2,8 +2,8 @@
 Quant_Researcher Agent
 
 Hard filters (both must pass):
-  • Piotroski F-Score ≥ 7
-  • 3-year average ROIC > 15%
+  - Piotroski F-Score >= 7  AND >= MIN_F_SCORE_SIGNALS signals with data
+  - 3-year average ROIC > 15%
 
 Ranking signal (Z-score combination, equal-weight):
   z_composite = mean(z_f_score, z_roic, z_momentum)
@@ -11,19 +11,18 @@ Ranking signal (Z-score combination, equal-weight):
 Output: top-N DataFrame  (index=ticker)
   columns: f_score, roic, momentum, z_f_score, z_roic, z_momentum, z_score, sector
 
-Fundamental data fetched via yfinance in parallel threads.
-Tickers that fail to return data are silently dropped (logged at DEBUG).
+Feature D: emits a DataCoverageReport after each run so you can see
+exactly which tickers failed and at which stage.
 """
 from __future__ import annotations
 
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import numpy as np
 import pandas as pd
 
 from agents.data_architect import DataBundle
-from core.factors import MomentumCalculator, PiotroskiFScore, ROICCalculator
+from core.factors import DataCoverageReport, MomentumCalculator, PiotroskiFScore, ROICCalculator
 
 logger = logging.getLogger(__name__)
 
@@ -49,41 +48,77 @@ class QuantResearcher:
         self._roic_calc = ROICCalculator()
         self._momentum_calc = MomentumCalculator()
 
-    def run(self, bundle: DataBundle, sector_map: dict[str, str]) -> pd.DataFrame:
+    def run(
+        self,
+        bundle: DataBundle,
+        sector_map: dict[str, str],
+        coverage: DataCoverageReport | None = None,
+    ) -> pd.DataFrame:
         """
         Returns a ranked DataFrame; empty if no candidates survive the hard filters.
+        `coverage` is updated in-place if provided.
         """
+        cov = coverage or DataCoverageReport()
+        cov.total = len(bundle.tickers)
         raw: dict[str, dict] = {}
 
-        def _evaluate(ticker: str) -> tuple[str, dict | None]:
-            f = self._f_scorer.score(ticker)
-            if f is None or f < self.f_score_min:
-                logger.debug("%s: F-Score=%s — dropped", ticker, f)
-                return ticker, None
+        def _evaluate(ticker: str) -> tuple[str, dict | None, str]:
+            # F-Score — now returns (score, n_signals)
+            f_score, n_signals = self._f_scorer.score(ticker)
+
+            if f_score is None:
+                reason = "no_fundamentals" if n_signals == 0 else "f_coverage"
+                return ticker, None, reason
+
+            if f_score < self.f_score_min:
+                return ticker, None, "f_filter"
 
             roic = self._roic_calc.compute(ticker)
-            if roic is None or roic < self.roic_min:
-                logger.debug("%s: ROIC=%s — dropped", ticker, roic)
-                return ticker, None
+            if roic is None:
+                return ticker, None, "roic_coverage"
+            if roic < self.roic_min:
+                return ticker, None, "roic_filter"
 
             mom = self._momentum_calc.compute(bundle.prices[ticker].dropna())
             if mom is None:
-                logger.debug("%s: insufficient price history for momentum", ticker)
-                return ticker, None
+                return ticker, None, "momentum"
 
             return ticker, {
-                "f_score": float(f),
+                "f_score": float(f_score),
+                "f_signals": n_signals,
                 "roic": float(roic),
                 "momentum": float(mom),
                 "sector": sector_map.get(ticker, "Unknown"),
-            }
+            }, "ok"
 
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
             futures = {pool.submit(_evaluate, t): t for t in bundle.tickers}
             for fut in as_completed(futures):
-                ticker, data = fut.result()
+                ticker, data, reason = fut.result()
                 if data:
                     raw[ticker] = data
+                    cov.passed_f_score += 1
+                    cov.passed_roic += 1
+                    cov.passed_momentum += 1
+                else:
+                    if reason == "no_fundamentals":
+                        cov.failed_no_fundamentals.append(ticker)
+                    elif reason == "f_coverage":
+                        cov.failed_f_score_coverage.append(ticker)
+                    elif reason == "f_filter":
+                        cov.failed_f_score_filter.append(ticker)
+                    elif reason == "roic_coverage":
+                        cov.passed_f_score += 1
+                        cov.failed_roic_coverage.append(ticker)
+                    elif reason == "roic_filter":
+                        cov.passed_f_score += 1
+                        cov.failed_roic_filter.append(ticker)
+                    elif reason == "momentum":
+                        cov.passed_f_score += 1
+                        cov.passed_roic += 1
+                        cov.failed_momentum.append(ticker)
+
+        cov.log_summary()
 
         if not raw:
             logger.warning("QuantResearcher: no tickers survived hard alpha filters.")
@@ -91,7 +126,6 @@ class QuantResearcher:
 
         df = pd.DataFrame.from_dict(raw, orient="index")
 
-        # Z-score individual factors then average
         for col in ("f_score", "roic", "momentum"):
             df[f"z_{col}"] = _zscore(df[col])
 
@@ -99,7 +133,7 @@ class QuantResearcher:
         df = df.sort_values("z_score", ascending=False).head(self.top_n)
 
         logger.info(
-            "QuantResearcher: %d candidates  |  z_score range [%.2f, %.2f]",
+            "QuantResearcher: %d candidates | z_score [%.2f, %.2f]",
             len(df), df["z_score"].min(), df["z_score"].max(),
         )
         return df
