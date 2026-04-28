@@ -33,9 +33,8 @@ from crewai import Agent, Crew, LLM, Process, Task
 from crewai.tools import tool
 from dotenv import load_dotenv
 
-load_dotenv()
-
 ROOT = Path(__file__).parent
+load_dotenv(ROOT / ".env", override=True)
 OUTPUT_DIR = ROOT / "output"
 CONFIG_PATH = ROOT / "config" / "config.yaml"
 PORTFOLIO_PATH = ROOT / "config" / "portfolio.json"

@@ -38,9 +38,8 @@ from core.risk import RiskConfig
 from core.universe import get_usd_sek_rate
 from notifiers.email_notifier import EmailNotifier
 
-load_dotenv()
-
 ROOT = Path(__file__).parent
+load_dotenv(ROOT / ".env", override=True)
 OUTPUT_DIR = ROOT / "output"
 CONFIG_PATH = ROOT / "config" / "config.yaml"
 PORTFOLIO_PATH = ROOT / "config" / "portfolio.json"
