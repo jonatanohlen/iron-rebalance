@@ -345,7 +345,9 @@ def build_crew(verbose: bool = True) -> Crew:
     if not api_key:
         raise EnvironmentError("ANTHROPIC_API_KEY not set in .env")
 
-    llm = LLM(model="anthropic/claude-sonnet-4-6", temperature=0.2)
+    # Use LiteLLM routing (no "anthropic/" prefix) to avoid the native
+    # Anthropic provider bug that creates empty text blocks with cache_control.
+    llm = LLM(model="claude-sonnet-4-6", temperature=0.2)
 
     data_architect = Agent(
         role="Data Architect",
