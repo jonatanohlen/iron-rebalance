@@ -1,0 +1,36 @@
+name: Fetch Market Data
+
+on:
+  schedule:
+    # Weekdays 22:30 UTC = after US market close (16:00 ET) + 30 min buffer
+    - cron: '30 22 * * 1-5'
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install yfinance pandas pyyaml
+
+      - name: Fetch market data
+        run: python tools/fetch_market_data.py
+
+      - name: Commit and push data
+        run: |
+          git config user.name "iron-rebalancer-bot"
+          git config user.email "bot@iron-rebalancer.local"
+          git add data/
+          git diff --staged --quiet && echo "No new data" || (
+            git commit -m "data: market prices $(date -u +%Y-%m-%d)"
+            git push
+          )

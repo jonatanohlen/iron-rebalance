@@ -9,6 +9,8 @@ __pycache__/
 output/*
 !output/.gitkeep
 
+# data/ directory is tracked — prices_close.csv etc. committed by GitHub Actions
+
 # Env
 .env
 *.env
