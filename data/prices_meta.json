@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-04-30T07:39:25",
+  "updated_utc": "2026-05-01T07:37:36",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -17,6 +17,7 @@
     "SECU-B.ST",
     "SCA-B.ST",
     "KINV-B.ST",
+    "NDA-SE.ST",
     "SHB-A.ST",
     "SEB-A.ST",
     "SINCH.ST",
@@ -61,11 +62,9 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [
-    "NDA-SE.ST"
-  ],
-  "usd_sek": 9.311140060424805,
+  "tickers_failed": [],
+  "usd_sek": 9.23328971862793,
   "date_from": "2025-03-24",
-  "date_to": "2026-04-29",
-  "trading_days": 284
+  "date_to": "2026-04-30",
+  "trading_days": 285
 }
