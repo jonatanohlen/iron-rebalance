@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-06-19T00:06:50",
+  "updated_utc": "2026-06-19T23:34:01",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -12,6 +12,7 @@
     "ALFA.ST",
     "HEXA-B.ST",
     "INDU-C.ST",
+    "ESSITY-B.ST",
     "TELIA.ST",
     "SECU-B.ST",
     "SCA-B.ST",
@@ -61,10 +62,8 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [
-    "ESSITY-B.ST"
-  ],
-  "usd_sek": 9.5791597366333,
+  "tickers_failed": [],
+  "usd_sek": 9.574080467224121,
   "date_from": "2025-05-12",
   "date_to": "2026-06-18",
   "trading_days": 286
