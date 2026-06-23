@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-06-22T23:48:23",
+  "updated_utc": "2026-06-23T23:34:19",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -21,7 +21,6 @@
     "SHB-A.ST",
     "SEB-A.ST",
     "SINCH.ST",
-    "GETI-B.ST",
     "LATO-B.ST",
     "LIFCO-B.ST",
     "BURE.ST",
@@ -62,9 +61,11 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [],
-  "usd_sek": 9.615300178527832,
-  "date_from": "2025-05-15",
-  "date_to": "2026-06-18",
+  "tickers_failed": [
+    "GETI-B.ST"
+  ],
+  "usd_sek": 9.735549926757812,
+  "date_from": "2025-05-16",
+  "date_to": "2026-06-22",
   "trading_days": 283
 }
