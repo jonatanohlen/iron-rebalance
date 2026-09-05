@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-04T00:12:21",
+  "updated_utc": "2026-09-05T00:13:01",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -63,8 +63,8 @@
     "MCD"
   ],
   "tickers_failed": [],
-  "usd_sek": 9.532170295715332,
-  "date_from": "2025-07-28",
-  "date_to": "2026-09-03",
+  "usd_sek": 9.565500259399414,
+  "date_from": "2025-07-29",
+  "date_to": "2026-09-04",
   "trading_days": 285
 }
