@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-10T00:22:07",
+  "updated_utc": "2026-09-11T00:18:07",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -33,7 +33,6 @@
     "ABB.ST",
     "AAPL",
     "MSFT",
-    "GOOGL",
     "AMZN",
     "META",
     "NVDA",
@@ -62,9 +61,11 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [],
-  "usd_sek": 9.5912504196167,
+  "tickers_failed": [
+    "GOOGL"
+  ],
+  "usd_sek": 9.682550430297852,
   "date_from": "2025-08-04",
-  "date_to": "2026-09-09",
-  "trading_days": 283
+  "date_to": "2026-09-10",
+  "trading_days": 284
 }
