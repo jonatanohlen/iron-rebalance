@@ -1,9 +1,8 @@
 {
-  "updated_utc": "2026-09-12T00:25:10",
+  "updated_utc": "2026-09-15T00:44:37",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
-    "ATCO-B.ST",
     "SAND.ST",
     "SKF-B.ST",
     "SWED-A.ST",
@@ -62,9 +61,11 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [],
-  "usd_sek": 9.684499740600586,
-  "date_from": "2025-08-05",
-  "date_to": "2026-09-11",
-  "trading_days": 284
+  "tickers_failed": [
+    "ATCO-B.ST"
+  ],
+  "usd_sek": 9.765800476074219,
+  "date_from": "2025-08-08",
+  "date_to": "2026-09-14",
+  "trading_days": 282
 }
