@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-15T00:38:59",
+  "updated_utc": "2026-10-16T00:31:11",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -9,6 +9,7 @@
     "SWED-A.ST",
     "SSAB-B.ST",
     "NIBE-B.ST",
+    "ALFA.ST",
     "HEXA-B.ST",
     "INDU-C.ST",
     "ESSITY-B.ST",
@@ -40,6 +41,7 @@
     "V",
     "MA",
     "PG",
+    "JNJ",
     "UNH",
     "HD",
     "BAC",
@@ -60,12 +62,9 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [
-    "ALFA.ST",
-    "JNJ"
-  ],
-  "usd_sek": 9.984970092773438,
+  "tickers_failed": [],
+  "usd_sek": 9.956549644470215,
   "date_from": "2025-09-08",
-  "date_to": "2026-10-14",
-  "trading_days": 284
+  "date_to": "2026-10-15",
+  "trading_days": 285
 }
