@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-05T02:37:31",
+  "updated_utc": "2026-11-06T02:37:50",
   "tickers_fetched": [
     "ERIC-B.ST",
     "VOLV-B.ST",
@@ -45,6 +45,7 @@
     "UNH",
     "HD",
     "BAC",
+    "XOM",
     "CVX",
     "LLY",
     "ABBV",
@@ -61,11 +62,9 @@
     "WMT",
     "MCD"
   ],
-  "tickers_failed": [
-    "XOM"
-  ],
-  "usd_sek": 9.709589958190918,
+  "tickers_failed": [],
+  "usd_sek": 9.820380210876465,
   "date_from": "2025-09-29",
-  "date_to": "2026-11-04",
-  "trading_days": 284
+  "date_to": "2026-11-05",
+  "trading_days": 285
 }
